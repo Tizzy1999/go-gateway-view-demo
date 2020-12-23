@@ -91,6 +91,13 @@ export const constantRoutes = [
         meta: { title: 'Services', icon: 'component', affix: true }
       },
       {
+        path: 'service_stat/:id(\\d+)',
+        component: () => import('@/views/service/stat'),
+        name: 'Statistics',
+        meta: { title: 'Statistics', icon: 'component', affix: false },
+        hidden: true
+      },
+      {
         path: 'service_create_http',
         component: () => import('@/views/service/http'),
         name: 'Add Http Service',
@@ -103,7 +110,22 @@ export const constantRoutes = [
         name: 'Update Http Service',
         meta: { title: 'Update Http Service', icon: 'component', affix: false },
         hidden: true
+      },
+      {
+        path: 'service_create_tcp',
+        component: () => import('@/views/service/tcp'),
+        name: 'Add TCP Service',
+        meta: { title: 'Add TCP Service', icon: 'component', affix: false },
+        hidden: true
+      },
+      {
+        path: 'service_edit_tcp/:id(\\d+)',
+        component: () => import('@/views/service/tcp'),
+        name: 'Update TCP Service',
+        meta: { title: 'Update TCP Service', icon: 'component', affix: false },
+        hidden: true
       }
+
     ]
   }
 ]
