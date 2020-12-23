@@ -140,6 +140,42 @@ export const constantRoutes = [
         hidden: true
       }
     ]
+  },
+  {
+    path: '/app',
+    component: Layout,
+    redirect: '/app/app_list',
+    name: 'Tenant',
+    meta: { title: 'Tenant', icon: 'user' },
+    children: [
+      {
+        path: 'app_list',
+        component: () => import('@/views/app/app_list'),
+        name: 'App List',
+        meta: { title: 'App List', icon: 'user', affix: false }
+      },
+      {
+        path: 'app_create',
+        component: () => import('@/views/app/app'),
+        name: 'CreateApp',
+        meta: { title: 'App List', icon: 'edit' },
+        hidden: true
+      },
+      {
+        path: 'app_edit/:id(\\d+)',
+        component: () => import('@/views/app/app'),
+        name: 'EditApp',
+        meta: { title: 'Edit App', icon: 'edit' },
+        hidden: true
+      },
+      {
+        path: 'app_stat/:id(\\d+)',
+        component: () => import('@/views/app/stat'),
+        name: 'AppStat',
+        meta: { title: 'App Statistics', noCache: true },
+        hidden: true
+      }
+    ]
   }
 ]
 

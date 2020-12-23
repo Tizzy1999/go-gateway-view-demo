@@ -2,22 +2,11 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input v-model="listQuery.info" placeholder="service name/ description" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" style="margin-left: 10px" @click="handleFilter">
-        Search
+      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" style="margin-left: 10px" @click="handleFilter">     Search
       </el-button>
-      <router-link :to="'/service/service_create_http/'">
+      <router-link :to="'/app/app_create/'">
         <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit">
-          Add HTTP service
-        </el-button>
-      </router-link>
-      <router-link :to="'/service/service_create_tcp/'">
-        <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit">
-          Add TCP service
-        </el-button>
-      </router-link>
-      <router-link :to="'/service/service_create_grpc/'">
-        <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit">
-          Add GRPC service
+          Add App
         </el-button>
       </router-link>
     </div>
@@ -36,64 +25,45 @@
           <span>{{ row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Service Name" min-width="110px">
+      <el-table-column label="app_id" min-width="50px">
         <template slot-scope="{row}">
-          <span>{{ row.service_name }}</span>
+          <span>{{ row.app_id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Service Description" min-width="120px">
-        <template slot-scope="{row}">
-          <span>{{ row.service_desc }}</span>
+      <el-table-column label="Name" min-width="80px">
+        <template slot-scope="{ row }">
+          <span>{{ row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Load Type" min-width="60px">
+      <el-table-column label="Secret Key" min-width="120px">
         <template slot-scope="{row}">
-          <span>{{ row.load_type | loadTypeFilter }}</span>
+          <span>{{ row.secret }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Service Address" min-width="165px">
+      <el-table-column label="QPS" min-width="30px">
         <template slot-scope="{row}">
-          <span>{{ row.service_addr }}</span>
+          <span>{{ row.real_qps }}/{{ row.qps }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="QPS" min-width="50px">
+      <el-table-column label="QPD" min-width="30px">
         <template slot-scope="{row}">
-          <span>{{ row.qps }}</span>
+          <span>{{ row.real_qpd }}/{{ row.qpd }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Daily Query" min-width="70px">
+
+      <el-table-column label="Operation" align="center" min-width="120" class-name="fixed-width">
         <template slot-scope="{row}">
-          <span>{{ row.qpd }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="Total Node" min-width="60px">
-        <template slot-scope="{row}">
-          <span>{{ row.total_node }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="Operation" align="center" width="230" class-name="small-padding fixed-width">
-        <template slot-scope="{row,$index}">
-          <router-link :to="'/service/service_stat/'+row.id">
-            <el-button type="primary" size="mini">
+          <router-link :to="'/app/app_stat/'+row.id">
+            <el-button type="primary" size="small" style="margin-right: 5px">
               Statistics
             </el-button>
           </router-link>
-          <router-link v-if="row.load_type===0" :to="'/service/service_edit_http/'+row.id">
-            <el-button type="primary" size="mini">
+          <router-link :to="'/app/app_edit/'+row.id">
+            <el-button type="primary" size="small" style="margin-right: 5px">
               Update
             </el-button>
           </router-link>
-          <router-link v-if="row.load_type===1" :to="'/service/service_edit_tcp/'+row.id">
-            <el-button type="primary" size="mini">
-              Update
-            </el-button>
-          </router-link>
-          <router-link v-if="row.load_type===2" :to="'/service/service_edit_grpc/'+row.id">
-            <el-button type="primary" size="mini">
-              Update
-            </el-button>
-          </router-link>
-          <el-button size="mini" type="danger" @click="handleDelete(row,$index)">
+          <el-button size="small" type="danger" @click="handleDelete(row)">
             Delete
           </el-button>
         </template>
@@ -105,30 +75,14 @@
 </template>
 
 <script>
-import { serviceList, serviceDelete } from '@/api/service'
+import { appList, appDelete } from '@/api/app'
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
-const loadTypeOptions = [
-  { key: '0', display_name: 'HTTP' },
-  { key: '1', display_name: 'TCP' },
-  { key: '2', display_name: 'GRPC' }
-]
-
-const loadTypeKeyValue = loadTypeOptions.reduce((acc, cur) => {
-  acc[cur.key] = cur.display_name
-  return acc
-}, {})
-
 export default {
-  name: 'ServiceList',
+  name: 'AppList',
   components: { Pagination },
   directives: { waves },
-  filters: {
-    loadTypeFilter(type) {
-      return loadTypeKeyValue[type]
-    }
-  },
   data() {
     return {
       tableKey: 0,
@@ -151,7 +105,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      serviceList(this.listQuery).then(response => {
+      appList(this.listQuery).then(response => {
         this.list = response.data.list
         this.total = response.data.total
         this.listLoading = false
@@ -161,7 +115,7 @@ export default {
       this.listQuery.page_no = 1
       this.getList()
     },
-    handleDelete(row, index) {
+    handleDelete(row) {
       this.$confirm('Are you sure to delete the record? This process cannot be undone.', 'Warning', {
         confirmButtonText: 'Delete',
         cancelButtonText: 'Cancel',
@@ -170,7 +124,7 @@ export default {
         const deleteQuery = {
           'id': row.id
         }
-        serviceDelete(deleteQuery).then(response => {
+        appDelete(deleteQuery).then(response => {
           this.$notify({
             title: 'Success',
             message: 'delete success',
