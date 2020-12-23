@@ -81,12 +81,28 @@ export const constantRoutes = [
     path: '/service',
     component: Layout,
     redirect: '/service/list',
+    name: 'Services',
+    meta: { title: 'Services', icon: 'component' },
     children: [
       {
         path: 'list',
         component: () => import('@/views/service/list'),
-        name: 'Dashboard',
+        name: 'Services',
         meta: { title: 'Services', icon: 'component', affix: true }
+      },
+      {
+        path: 'service_create_http',
+        component: () => import('@/views/service/http'),
+        name: 'Add Http Service',
+        meta: { title: 'Add Http Service', icon: 'component', affix: false },
+        hidden: true
+      },
+      {
+        path: 'service_edit_http/:id(\\d+)',
+        component: () => import('@/views/service/http'),
+        name: 'Update Http Service',
+        meta: { title: 'Update Http Service', icon: 'component', affix: false },
+        hidden: true
       }
     ]
   }
