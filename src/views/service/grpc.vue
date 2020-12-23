@@ -3,8 +3,8 @@
     <el-row>
       <el-card class="box-card">
         <div slot="header" class="clearfix">
-          <span v-if="isEdit===false">Create HTTP Service</span>
-          <span v-if="isEdit===true">Update HTTP Service</span>
+          <span v-if="isEdit===false">Create GRPC Service</span>
+          <span v-if="isEdit===true">Update GRPC Service</span>
         </div>
         <div style="margin-bottom:50px;">
           <el-form ref="form" :model="form" label-width="140px">
@@ -14,37 +14,10 @@
             <el-form-item label=" Description" class="is-required">
               <el-input v-model="form.service_desc" placeholder="Maximum 255 characters" />
             </el-form-item>
-            <el-form-item label="Access Type" class="is-required">
-              <el-input v-model="form.rule" :disabled="isEdit===true" placeholder="Path：/user/, Domain：www.test.com" class="input-with-select">
-                <el-select slot="prepend" v-model="form.rule_type" placeholder="Select" style="width:95px" :disabled="isEdit===true">
-                  <el-option label="Path" :value="0" />
-                  <el-option label="Domain" :value="1" />
-                </el-select>
-              </el-input>
+            <el-form-item label=" Port" class="is-required">
+              <el-input v-model="form.port" placeholder="8001-8999" />
             </el-form-item>
-            <el-form-item label="https">
-              <el-switch
-                v-model="form.need_https"
-                :active-value="1"
-                :inactive-value="0"
-              />
-              <span style="color:#606266;font-weight: 700;">&nbsp;&nbsp;strip_uri&nbsp;&nbsp;</span>
-              <el-switch
-                v-model="form.need_strip_uri"
-                :active-value="1"
-                :inactive-value="0"
-              />
-              <span style="color:#606266;font-weight: 700;">&nbsp;&nbsp;&nbsp;&nbsp;websocket&nbsp;&nbsp;</span>
-              <el-switch
-                v-model="form.need_websocket"
-                :active-value="1"
-                :inactive-value="0"
-              />
-            </el-form-item>
-            <el-form-item label="URL Rewrite">
-              <el-input v-model="form.url_rewrite" type="textarea" autosize placeholder="Format：^/gateway/test_service(.*) $1 多条换行" />
-            </el-form-item>
-            <el-form-item label="Header Transfer">
+            <el-form-item label="Metadata Transfer">
               <el-input v-model="form.header_transfer" type="textarea" autosize placeholder="add/del/edit format:add headerName headValue" />
             </el-form-item>
             <el-form-item label="Authentication">
@@ -71,10 +44,10 @@
 
             <el-form-item label="Round type">
               <el-radio-group v-model="form.round_type">
-                <el-radio :label="0">random</el-radio>
-                <el-radio :label="1">round-robin</el-radio>
-                <el-radio :label="2">weight_round-robin</el-radio>
-                <el-radio :label="3">ip_hash</el-radio>
+                <el-radio v-model="form.round_type" label="0">random</el-radio>
+                <el-radio v-model="form.round_type" label="1">round-robin</el-radio>
+                <el-radio v-model="form.round_type" label="2">weight_round-robin</el-radio>
+                <el-radio v-model="form.round_type" label="3">ip_hash</el-radio>
               </el-radio-group>
             </el-form-item>
 
@@ -84,22 +57,6 @@
 
             <el-form-item label="Weight list" class="is-required">
               <el-input v-model="form.weight_list" type="textarea" autosize placeholder="格式：50 多条换行" />
-            </el-form-item>
-
-            <el-form-item label="Connect timeout">
-              <el-input v-model="form.upstream_connect_timeout" placeholder="单位s，0表示无限制" />
-            </el-form-item>
-
-            <el-form-item label="Header timeout">
-              <el-input v-model="form.upstream_header_timeout" placeholder="单位s，0表示无限制" />
-            </el-form-item>
-
-            <el-form-item label="Idle timeout">
-              <el-input v-model="form.upstream_idle_timeout" placeholder="单位s，0表示无限制" />
-            </el-form-item>
-
-            <el-form-item label="Idle connection">
-              <el-input v-model="form.upstream_max_idle" placeholder="0表示无限制" />
             </el-form-item>
             <el-form-item>
               <el-button type="primary" :disabled="submitButDisabled" @click="handleSubmit">Submit</el-button>
@@ -112,9 +69,9 @@
 </template>
 
 <script>
-import { serviceAddHttp, serviceDetail, serviceUpdateHttp } from '@/api/service'
+import { serviceAddGrpc, serviceDetail, serviceUpdateGrpc } from '@/api/service'
 export default {
-  name: 'ServiceCreateHttp',
+  name: 'ServiceCreateGRPC',
   data() {
     return {
       isEdit: false,
@@ -122,20 +79,10 @@ export default {
       form: {
         service_name: '',
         service_desc: '',
-        rule_type: 0,
-        rule: '',
-        need_https: 0,
-        need_websocket: 0,
-        need_strip_uri: 1,
-        url_rewrite: '',
         header_transfer: '',
         round_type: 2,
         ip_list: '',
         weight_list: '',
-        upstream_connect_timeout: '',
-        upstream_header_timeout: '',
-        upstream_idle_timeout: '',
-        upstream_max_idle: '',
         open_auth: 0,
         black_list: '',
         white_list: '',
@@ -157,30 +104,18 @@ export default {
       const query = { 'id': id }
       serviceDetail(query).then(response => {
         this.form.id = response.data.info.id
-        this.form.load_type = response.data.info.load_type
         this.form.service_name = response.data.info.service_name
         this.form.service_desc = response.data.info.service_desc
-        this.form.rule_type = response.data.http_rule.rule_type
-        this.form.rule = response.data.http_rule.rule
-        this.form.need_https = response.data.http_rule.need_https
-        this.form.need_websocket = response.data.http_rule.need_websocket
-        this.form.need_strip_uri = response.data.http_rule.need_strip_uri
-        this.form.url_rewrite = response.data.http_rule.url_rewrite.replace(/,/g, '\n')
-        this.form.header_transfer = response.data.http_rule.header_transfer.replace(/,/g, '\n')
-        this.form.round_type = response.data.load_balance.round_type
-        this.form.round_type = response.data.load_balance.round_type
-        this.form.ip_list = response.data.load_balance.ip_list.replace(/,/g, '\n')
-        this.form.weight_list = response.data.load_balance.weight_list.replace(/,/g, '\n')
-        this.form.upstream_connect_timeout = response.data.load_balance.upstream_connect_timeout
-        this.form.upstream_header_timeout = response.data.load_balance.upstream_header_timeout
-        this.form.upstream_idle_timeout = response.data.load_balance.upstream_idle_timeout
-        this.form.upstream_max_idle = response.data.load_balance.upstream_max_idle
-        this.form.upstream_max_idle = response.data.load_balance.upstream_max_idle
+        this.form.port = response.data.grpc_rule.port.toString()
         this.form.open_auth = response.data.access_control.open_auth
+
         this.form.black_list = response.data.access_control.black_list.replace(/,/g, '\n')
         this.form.white_list = response.data.access_control.white_list.replace(/,/g, '\n')
         this.form.clientip_flow_limit = response.data.access_control.clientip_flow_limit
         this.form.service_flow_limit = response.data.access_control.service_flow_limit
+        this.form.round_type = response.data.load_balance.round_type.toString()
+        this.form.ip_list = response.data.load_balance.ip_list.replace(/,/g, '\n')
+        this.form.weight_list = response.data.load_balance.weight_list.replace(/,/g, '\n')
         console.log(response)
       }).catch((err) => {
         console.log('fetch data error: ' + err)
@@ -190,20 +125,16 @@ export default {
       this.submitButDisabled = true
       const query = Object.assign({}, this.form)
       console.log(query)
-      query.url_rewrite = query.url_rewrite.replace(/\n/g, ',')
-      query.header_transfer = query.header_transfer.replace(/\n/g, ',')
       query.ip_list = query.ip_list.replace(/\n/g, ',')
       query.weight_list = query.weight_list.replace(/\n/g, ',')
       query.black_list = query.black_list.replace(/\n/g, ',')
       query.white_list = query.white_list.replace(/\n/g, ',')
+      query.round_type = Number(query.round_type)
+      query.port = Number(query.port)
       query.service_flow_limit = Number(query.service_flow_limit)
       query.clientip_flow_limit = Number(query.clientip_flow_limit)
-      query.upstream_connect_timeout = Number(query.upstream_connect_timeout)
-      query.upstream_header_timeout = Number(query.upstream_header_timeout)
-      query.upstream_idle_timeout = Number(query.upstream_idle_timeout)
-      query.upstream_max_idle = Number(query.upstream_max_idle)
       if (this.isEdit) {
-        serviceUpdateHttp(query).then(response => {
+        serviceUpdateGrpc(query).then(response => {
           this.submitButDisabled = false
           this.$notify({
             title: 'Success',
@@ -215,7 +146,7 @@ export default {
           this.submitButDisabled = false
         })
       } else {
-        serviceAddHttp(query).then(response => {
+        serviceAddGrpc(query).then(response => {
           this.submitButDisabled = false
           this.$notify({
             title: 'Success',

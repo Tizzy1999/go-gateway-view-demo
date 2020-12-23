@@ -41,10 +41,10 @@
 
             <el-form-item label="Round type">
               <el-radio-group v-model="form.round_type">
-                <el-radio :label="0">random</el-radio>
-                <el-radio :label="1">round-robin</el-radio>
-                <el-radio :label="2">weight_round-robin</el-radio>
-                <el-radio :label="3">ip_hash</el-radio>
+                <el-radio v-model="form.round_type" label="0">random</el-radio>
+                <el-radio v-model="form.round_type" label="1">round-robin</el-radio>
+                <el-radio v-model="form.round_type" label="2">weight_round-robin</el-radio>
+                <el-radio v-model="form.round_type" label="3">ip_hash</el-radio>
               </el-radio-group>
             </el-form-item>
 
@@ -69,7 +69,7 @@
 <script>
 import { serviceAddTcp, serviceDetail, serviceUpdateTcp } from '@/api/service'
 export default {
-  name: 'ServiceCreateHttp',
+  name: 'ServiceCreateTCP',
   data() {
     return {
       isEdit: false,
@@ -83,7 +83,7 @@ export default {
         white_list: '',
         clientip_flow_limit: '',
         service_flow_limit: '',
-        round_type: '',
+        round_type: 2,
         ip_list: '',
         weight_list: ''
       }

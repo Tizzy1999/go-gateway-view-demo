@@ -124,8 +124,21 @@ export const constantRoutes = [
         name: 'Update TCP Service',
         meta: { title: 'Update TCP Service', icon: 'component', affix: false },
         hidden: true
+      },
+      {
+        path: 'service_create_grpc',
+        component: () => import('@/views/service/grpc'),
+        name: 'Add GRPC Service',
+        meta: { title: 'Add GRPC Service', icon: 'component', affix: false },
+        hidden: true
+      },
+      {
+        path: 'service_edit_grpc/:id(\\d+)',
+        component: () => import('@/views/service/grpc'),
+        name: 'Update GRPC Service',
+        meta: { title: 'Update GRPC Service', icon: 'component', affix: false },
+        hidden: true
       }
-
     ]
   }
 ]

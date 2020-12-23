@@ -71,10 +71,10 @@
 
             <el-form-item label="Round type">
               <el-radio-group v-model="form.round_type">
-                <el-radio :label="0">random</el-radio>
-                <el-radio :label="1">round-robin</el-radio>
-                <el-radio :label="2">weight_round-robin</el-radio>
-                <el-radio :label="3">ip_hash</el-radio>
+                <el-radio v-model="form.round_type" label="0">random</el-radio>
+                <el-radio v-model="form.round_type" label="1">round-robin</el-radio>
+                <el-radio v-model="form.round_type" label="2">weight_round-robin</el-radio>
+                <el-radio v-model="form.round_type" label="3">ip_hash</el-radio>
               </el-radio-group>
             </el-form-item>
 
@@ -168,7 +168,6 @@ export default {
         this.form.url_rewrite = response.data.http_rule.url_rewrite.replace(/,/g, '\n')
         this.form.header_transfer = response.data.http_rule.header_transfer.replace(/,/g, '\n')
         this.form.round_type = response.data.load_balance.round_type
-        this.form.round_type = response.data.load_balance.round_type
         this.form.ip_list = response.data.load_balance.ip_list.replace(/,/g, '\n')
         this.form.weight_list = response.data.load_balance.weight_list.replace(/,/g, '\n')
         this.form.upstream_connect_timeout = response.data.load_balance.upstream_connect_timeout
@@ -192,6 +191,7 @@ export default {
       console.log(query)
       query.url_rewrite = query.url_rewrite.replace(/\n/g, ',')
       query.header_transfer = query.header_transfer.replace(/\n/g, ',')
+      query.round_type = Number(query.round_type)
       query.ip_list = query.ip_list.replace(/\n/g, ',')
       query.weight_list = query.weight_list.replace(/\n/g, ',')
       query.black_list = query.black_list.replace(/\n/g, ',')
