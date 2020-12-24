@@ -36,12 +36,12 @@
           <span>{{ row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Service Name" min-width="110px">
+      <el-table-column label="Service Name" min-width="100px">
         <template slot-scope="{row}">
           <span>{{ row.service_name }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Service Description" min-width="120px">
+      <el-table-column label="Description" min-width="130px">
         <template slot-scope="{row}">
           <span>{{ row.service_desc }}</span>
         </template>
@@ -51,7 +51,7 @@
           <span>{{ row.load_type | loadTypeFilter }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Service Address" min-width="165px">
+      <el-table-column label="Address" min-width="165px">
         <template slot-scope="{row}">
           <span>{{ row.service_addr }}</span>
         </template>
@@ -61,39 +61,39 @@
           <span>{{ row.qps }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Daily Query" min-width="70px">
+      <el-table-column label="QPD" min-width="50px">
         <template slot-scope="{row}">
           <span>{{ row.qpd }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Total Node" min-width="60px">
+      <el-table-column label="Total Node" min-width="50px">
         <template slot-scope="{row}">
           <span>{{ row.total_node }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Operation" align="center" width="230" class-name="small-padding fixed-width">
+      <el-table-column label="Operation" align="center" width="250" class-name="small-padding fixed-width">
         <template slot-scope="{row,$index}">
           <router-link :to="'/service/service_stat/'+row.id">
-            <el-button type="primary" size="mini">
+            <el-button type="primary" size="mini" style="margin-right: 5px">
               Statistics
             </el-button>
           </router-link>
           <router-link v-if="row.load_type===0" :to="'/service/service_edit_http/'+row.id">
-            <el-button type="primary" size="mini">
+            <el-button type="primary" size="mini" style="margin-right: 5px">
               Update
             </el-button>
           </router-link>
           <router-link v-if="row.load_type===1" :to="'/service/service_edit_tcp/'+row.id">
-            <el-button type="primary" size="mini">
+            <el-button type="primary" size="mini" style="margin-right: 5px">
               Update
             </el-button>
           </router-link>
           <router-link v-if="row.load_type===2" :to="'/service/service_edit_grpc/'+row.id">
-            <el-button type="primary" size="mini">
+            <el-button type="primary" size="mini" style="margin-right: 5px">
               Update
             </el-button>
           </router-link>
-          <el-button size="mini" type="danger" @click="handleDelete(row,$index)">
+          <el-button size="mini" type="danger" style="margin-right: 5px" @click="handleDelete(row,$index)">
             Delete
           </el-button>
         </template>

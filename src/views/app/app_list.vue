@@ -54,16 +54,16 @@
       <el-table-column label="Operation" align="center" min-width="120" class-name="fixed-width">
         <template slot-scope="{row}">
           <router-link :to="'/app/app_stat/'+row.id">
-            <el-button type="primary" size="small" style="margin-right: 5px">
+            <el-button type="primary" size="mini" style="margin-right: 5px">
               Statistics
             </el-button>
           </router-link>
           <router-link :to="'/app/app_edit/'+row.id">
-            <el-button type="primary" size="small" style="margin-right: 5px">
+            <el-button type="primary" size="mini" style="margin-right: 5px">
               Update
             </el-button>
           </router-link>
-          <el-button size="small" type="danger" @click="handleDelete(row)">
+          <el-button size="mini" type="danger" @click="handleDelete(row)">
             Delete
           </el-button>
         </template>
