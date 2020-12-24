@@ -88,7 +88,7 @@ export const constantRoutes = [
         path: 'list',
         component: () => import('@/views/service/list'),
         name: 'Services',
-        meta: { title: 'Services', icon: 'component', affix: true }
+        meta: { title: 'Services', icon: 'component', affix: false }
       },
       {
         path: 'service_stat/:id(\\d+)',
