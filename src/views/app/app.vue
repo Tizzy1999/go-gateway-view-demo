@@ -11,7 +11,7 @@
             <el-form-item label="app_id" class="is-required">
               <el-input v-model="form.app_id" placeholder="6-128 characters" :disabled="isEdit===true" />
             </el-form-item>
-            <el-form-item label="Name" class="is-required">
+            <el-form-item label="Description" class="is-required">
               <el-input v-model="form.name" placeholder="Maximum 255 characters" />
             </el-form-item>
             <el-form-item label="Secret Key">
